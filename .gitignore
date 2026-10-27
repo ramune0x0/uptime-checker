@@ -1,11 +1,15 @@
-# golang/example の clone (チュートリアル 3 用)。go.work から参照するが、再 clone できるので管理しない
-go/workspace/example/
-
 # 実行時に生成される SQLite ファイル
 *.db
+*.db-journal
+*.db-wal
+*.db-shm
 
-# go build が生成する実行ファイル
-go/hello/hello
-go/checker/checker
+# go build の成果物
+/bin/
 
+# フロントのビルド成果物と依存
+web/node_modules/
+web/dist/
+
+.env
 .DS_Store
