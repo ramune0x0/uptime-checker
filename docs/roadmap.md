@@ -4,19 +4,20 @@
 順番は 1 → 2 → 3 → 4 → 5 → 6 → 8 → 9 → 10 → 7。マルチリージョンは構成を変えるので最後に回す。
 
 各ステップは `docs/steps/NN-*.md` の課題カードに受け入れ条件を書き、それを満たしたらコミットして次へ進む。
+課題カードはそのステップに着手するときに作る。ファイル名の番号は課題ページの Step 番号に合わせる。
 
-| Step | 課題 | 成果物 | 学ぶ Go の概念 |
-|---|---|---|---|
-| 1 | 単発チェック CLI | `cmd/check`, `internal/check` | `flag`, `net/http.Client` の Timeout, `context.WithTimeout`, `errors.As` と `net.Error`, `time.Since`, 終了コード, `net/http/httptest` |
-| 2 | 定期実行と設定ファイル | `cmd/uptime`, `internal/target`, `internal/schedule` | `time.Ticker` (setInterval 相当), goroutine, `sync.WaitGroup`, `context` と `signal.NotifyContext` による停止, `encoding/json`, `log/slog` |
-| 3 | 結果の保存と 24h 稼働率 | `internal/store` | `database/sql`, `modernc.org/sqlite`, `go:embed` でスキーマ, UTC / RFC3339, SQL の集計 |
-| 4 | ダッシュボード | `internal/httpserver`, `web/` | Go 1.22 以降の `ServeMux` メソッドパターン, JSON ハンドラ, `http.Flusher` で SSE, `embed.FS` で静的配信, goroutine 間の結果配信 (channel) |
-| 5 | アラート | `internal/alert` | 状態遷移の検出, インタフェースで通知先を差し替え, `net/smtp` or webhook POST, クールダウン, 環境変数 |
-| 6 | 公開ステータスページ | `internal/store` 拡張, `web/` 追加 | 日次ロールアップ, インシデントの開始/終了, `encoding/xml` で RSS |
-| 8 | SSL 証明書監視 | `internal/check` 拡張 | `crypto/tls`, `resp.TLS.PeerCertificates`, `NotAfter` |
-| 9 | 高度なチェック | `internal/check`, `internal/target` 拡張 | `io.LimitReader`, `strings.Contains`, カスタムメソッド/ヘッダ/ボディ, `net/http/httptrace` で DNS 時間 |
-| 10 | コンテナ化 | `Dockerfile`, `compose.yaml` | マルチステージビルド, `CGO_ENABLED=0`, docker compose |
-| 7 | マルチリージョン | `cmd/agent`, 中央 API | 役割の分離, HTTP クライアントとしての Go, リージョン別集計, 複数失敗時のみ通知 |
+| Step | 課題 | 課題カード | 成果物 | 学ぶ Go の概念 |
+|---|---|---|---|---|
+| 1 | 単発チェック CLI | `docs/steps/01-single-check.md` | `cmd/check`, `internal/check` | `flag`, `net/http.Client` の Timeout, `context.WithTimeout`, `errors.As` と `net.Error`, `time.Since`, 終了コード, `net/http/httptest` |
+| 2 | 定期実行と設定ファイル | `docs/steps/02-scheduled-checks.md` | `cmd/uptime`, `internal/target`, `internal/schedule` | `time.Ticker` (setInterval 相当), goroutine, `sync.WaitGroup`, `context` と `signal.NotifyContext` による停止, `encoding/json`, `log/slog` |
+| 3 | 結果の保存と 24h 稼働率 | `docs/steps/03-store-results.md` | `internal/store` | `database/sql`, `modernc.org/sqlite`, `go:embed` でスキーマ, UTC / RFC3339, SQL の集計 |
+| 4 | ダッシュボード | `docs/steps/04-dashboard.md` | `internal/httpserver`, `web/` | Go 1.22 以降の `ServeMux` メソッドパターン, JSON ハンドラ, `http.Flusher` で SSE, `embed.FS` で静的配信, goroutine 間の結果配信 (channel) |
+| 5 | アラート | `docs/steps/05-alerts.md` | `internal/alert` | 状態遷移の検出, インタフェースで通知先を差し替え, `net/smtp` or webhook POST, クールダウン, 環境変数 |
+| 6 | 公開ステータスページ | `docs/steps/06-status-page.md` | `internal/store` 拡張, `web/` 追加 | 日次ロールアップ, インシデントの開始/終了, `encoding/xml` で RSS |
+| 8 | SSL 証明書監視 | `docs/steps/08-ssl-monitoring.md` | `internal/check` 拡張 | `crypto/tls`, `resp.TLS.PeerCertificates`, `NotAfter` |
+| 9 | 高度なチェック | `docs/steps/09-advanced-checks.md` | `internal/check`, `internal/target` 拡張 | `io.LimitReader`, `strings.Contains`, カスタムメソッド/ヘッダ/ボディ, `net/http/httptrace` で DNS 時間 |
+| 10 | コンテナ化 | `docs/steps/10-deploy.md` | `Dockerfile`, `compose.yaml` | マルチステージビルド, `CGO_ENABLED=0`, docker compose |
+| 7 | マルチリージョン | `docs/steps/07-multi-region.md` | `cmd/agent`, 中央 API | 役割の分離, HTTP クライアントとしての Go, リージョン別集計, 複数失敗時のみ通知 |
 
 ## 各ステップの受け入れ条件 (要約)
 
