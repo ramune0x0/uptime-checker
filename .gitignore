@@ -13,3 +13,11 @@ web/dist/
 
 .env
 .DS_Store
+
+mtg/*
+
+# 挙動確認用の実験コード
+/scratch/
+
+# go build ./cmd/check が出力するバイナリ
+/check
