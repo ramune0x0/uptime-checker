@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
@@ -8,8 +9,16 @@ import (
 )
 
 func checkURL(url string) bool {
+	ctx, cancelFunc := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelFunc()
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		fmt.Printf("DOWN %s -> %v\n", url, err)
+		return false
+	}
+
 	start := time.Now()
-	resp, err := http.Get(url)
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		fmt.Printf("DOWN %s -> %v\n", url, err)
 		return false
