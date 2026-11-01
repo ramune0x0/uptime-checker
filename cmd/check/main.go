@@ -2,14 +2,15 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"net/http"
 	"os"
 	"time"
 )
 
-func checkURL(url string) bool {
-	ctx, cancelFunc := context.WithTimeout(context.Background(), 5*time.Second)
+func checkURL(url string, timeout time.Duration) bool {
+	ctx, cancelFunc := context.WithTimeout(context.Background(), timeout)
 	defer cancelFunc()
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
@@ -35,14 +36,15 @@ func checkURL(url string) bool {
 }
 
 func main() {
-	if len(os.Args) == 1 {
+	timeout := flag.Duration("timeout", 5*time.Second, "timeout per request (e.g. 5s, 500ms)")
+	flag.Parse()
+	if len(flag.Args()) == 0 {
 		fmt.Fprintln(os.Stderr, "usage: go run ./cmd/check <URL> ...")
 		os.Exit(2)
 	}
-
 	hasDown := false
-	for _, v := range os.Args[1:] {
-		if !checkURL(v) {
+	for _, v := range flag.Args() {
+		if !checkURL(v, *timeout) {
 			hasDown = true
 		}
 	}
