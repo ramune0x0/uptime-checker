@@ -17,8 +17,8 @@ func (r Result) IsUp() bool {
 }
 
 func URL(url string, timeout time.Duration) Result {
-	ctx, cancelFunc := context.WithTimeout(context.Background(), timeout)
-	defer cancelFunc()
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
@@ -34,5 +34,5 @@ func URL(url string, timeout time.Duration) Result {
 	defer resp.Body.Close()
 	elapsed := time.Since(start)
 
-	return Result{resp.StatusCode, elapsed, nil}
+	return Result{StatusCode: resp.StatusCode, Elapsed: elapsed}
 }
