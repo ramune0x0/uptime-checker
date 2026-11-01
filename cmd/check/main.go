@@ -1,35 +1,38 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"net/http"
 	"os"
 	"time"
+
+	"github.com/ramune0x0/uptime-checker/internal/check"
 )
 
-func checkURL(url string) {
-	start := time.Now()
-	resp, err := http.Get(url)
-	if err != nil {
-		fmt.Printf("DOWN %s -> %v\n", url, err)
-		return
-	}
-	defer resp.Body.Close()
-	elapsed := time.Since(start)
-	if resp.StatusCode >= http.StatusOK && resp.StatusCode < http.StatusBadRequest {
-		fmt.Printf("UP %s -> %d, %dms\n", url, resp.StatusCode, elapsed.Milliseconds())
-	} else {
-		fmt.Printf("DOWN %s -> %d, %dms\n", url, resp.StatusCode, elapsed.Milliseconds())
-	}
-}
-
 func main() {
-	if len(os.Args) == 1 {
-		fmt.Fprintln(os.Stderr, "usage: go run ./cmd/check <URL> ...")
+	timeout := flag.Duration("timeout", 5*time.Second, "timeout per request (e.g. 5s, 500ms)")
+	flag.Parse()
+	if len(flag.Args()) == 0 {
+		fmt.Fprintf(os.Stderr, "usage: %s [-timeout 5s] <URL> ...\n", os.Args[0])
 		os.Exit(2)
 	}
 
-	for _, v := range os.Args[1:] {
-		checkURL(v)
+	hasDown := false
+	for _, url := range flag.Args() {
+		r := check.URL(url, *timeout)
+		if r.Err != nil {
+			fmt.Printf("DOWN %s -> %v\n", url, r.Err)
+			hasDown = true
+			continue
+		}
+		if r.IsUp() {
+			fmt.Printf("UP %s -> %d, %dms\n", url, r.StatusCode, r.Elapsed.Milliseconds())
+		} else {
+			fmt.Printf("DOWN %s -> %d, %dms\n", url, r.StatusCode, r.Elapsed.Milliseconds())
+			hasDown = true
+		}
+	}
+	if hasDown {
+		os.Exit(1)
 	}
 }

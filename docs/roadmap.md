@@ -6,6 +6,9 @@
 各ステップは `docs/steps/NN-*.md` の課題カードに受け入れ条件を書き、それを満たしたらコミットして次へ進む。
 課題カードはそのステップに着手するときに作る。ファイル名の番号は課題ページの Step 番号に合わせる。
 
+ステップごとに `feature/stepN-<内容>` ブランチを切る。`/go-review` を通してから PR を出し、メンターのレビューを受けてマージする。
+品質の基準は CLAUDE.md の「品質の基準」に従う。
+
 | Step | 課題 | 課題カード | 成果物 | 学ぶ Go の概念 |
 |---|---|---|---|---|
 | 1 | 単発チェック CLI | `docs/steps/01-single-check.md` | `cmd/check`, `internal/check` | `flag`, `net/http.Client` の Timeout, `context.WithTimeout`, `errors.As` と `net.Error`, `time.Since`, 終了コード, `net/http/httptest` |

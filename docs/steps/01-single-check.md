@@ -21,7 +21,7 @@ echo $?
 - [ ] 接続失敗・タイムアウトなら `DOWN` と理由を表示して終了コード 1
 - [ ] タイムアウトは既定 5 秒。`-timeout 2s` のようなフラグで変更できる
 - [ ] チェックのロジックは `internal/check` パッケージに置き、`cmd/check/main.go` は引数処理と表示だけ
-- [ ] `internal/check` に `net/http/httptest` を使ったテストが 3 ケース以上 (200 / 500 / タイムアウト)
+- [ ] `internal/check` に `net/http/httptest` を使ったテストが 3 ケース以上 (200 / 500 / タイムアウト)。元の課題ページには無い追加条件なので、分離までの PR とは別の PR にする (2026-11-02 決定)
 - [ ] `go vet ./...` と `go test ./...` が通る
 
 ## 学ぶ Go の概念
@@ -29,15 +29,18 @@ echo $?
 | 概念 | 読む場所 |
 |---|---|
 | コマンドライン引数とフラグ | `flag` パッケージ: https://pkg.go.dev/flag (`flag.Duration`, `flag.Args`) |
-| HTTP クライアントとタイムアウト | https://pkg.go.dev/net/http#Client の `Timeout` フィールド |
-| context によるタイムアウト | https://pkg.go.dev/context#WithTimeout と `http.NewRequestWithContext` |
+| `http.Get` がエラーを返す条件 | https://pkg.go.dev/net/http#Client.Do 。非 2xx はエラーにならず、エラー時は `*url.Error` |
+| context によるタイムアウト | https://pkg.go.dev/context#WithTimeout と https://pkg.go.dev/net/http#NewRequestWithContext |
+| HTTP クライアントとタイムアウト | https://pkg.go.dev/net/http#Client の `Timeout` フィールド (context との比較用) |
+| `defer` の実行順 | https://go.dev/tour/flowcontrol/12 と https://go.dev/tour/flowcontrol/13 (LIFO) |
 | エラーの種類を見分ける | https://pkg.go.dev/errors#As, https://pkg.go.dev/net#Error の `Timeout()` |
 | 経過時間の計測 | https://pkg.go.dev/time#Since, `Duration.Milliseconds` |
 | 終了コード | https://pkg.go.dev/os#Exit。`defer` が実行されない点に注意 |
 | HTTP のテスト | https://pkg.go.dev/net/http/httptest#NewServer |
 | 内部パッケージ | https://go.dev/doc/go1.4#internalpackages |
 
-`Client.Timeout` と `context.WithTimeout` はどちらでもタイムアウトを実現できる。両方読んで、違いを説明できるようにする。
+タイムアウトは `context.WithTimeout` で実現する (2026-10-28 メンターの推奨)。Step 2 で goroutine の停止にも context を使うので、ここで慣れておく。
+`Client.Timeout` との違いも説明できるようにする。
 
 ## 自分で考える設計の問い
 
@@ -59,5 +62,7 @@ echo $?
 ## 完了したら
 
 1. `go vet ./...` と `go test ./...` の結果を確認
-2. Claude にレビューを依頼
-3. 指摘を直してコミット。次は Step 2 の課題カードを Claude が書く
+2. `/go-review` でレビューを受ける。「これは何をしている?」の問いに自分の言葉で答えられるまで直す
+3. 指摘を直してコミット。ブランチ `feature/step1-single-check` から PR を出し、メンターのレビューを受ける
+4. `main.go` と `internal/check` で使った標準ライブラリの関数を、pkg.go.dev を見ながら `docs/notes/stdlib.md` にまとめる
+5. 次は Step 2 の課題カードを Claude が書く
