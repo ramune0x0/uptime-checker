@@ -64,4 +64,5 @@ echo $?
 1. `go vet ./...` と `go test ./...` の結果を確認
 2. `/go-review` でレビューを受ける。「これは何をしている?」の問いに自分の言葉で答えられるまで直す
 3. 指摘を直してコミット。ブランチ `feature/step1-single-check` から PR を出し、メンターのレビューを受ける
-4. 次は Step 2 の課題カードを Claude が書く
+4. `main.go` と `internal/check` で使った標準ライブラリの関数を、pkg.go.dev を見ながら `docs/notes/stdlib.md` にまとめる
+5. 次は Step 2 の課題カードを Claude が書く
