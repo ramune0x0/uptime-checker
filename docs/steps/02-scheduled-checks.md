@@ -83,7 +83,7 @@ Step 1 では context を「時間切れ」に使った。Step 2 では同じ co
 2. `/go-review` でレビューを受ける。「これは何をしている?」に答えられるまで直す
 3. 指摘を直してコミット。ブランチ `feature/step2-scheduled-checks` から PR を出す
 4. 使った標準ライブラリを `docs/notes/stdlib.md` の「Step 2」に追記する (Step 1 分が未記入なら先に埋める)
-5. 問い 1 と 5 の結論を `docs/adr/` に記録する (Claude が書く)
+5. 問い 1 と 5 は [ADR 0006](../adr/0006-goroutine-per-target.md) と [ADR 0007](../adr/0007-check-takes-context.md) に記録済み。他の問いで構造に関わる決定が出たら追記する
 6. 次は Step 3 の課題カードを Claude が書く
 
 ## ブランチの切り方
