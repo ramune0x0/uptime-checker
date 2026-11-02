@@ -1,0 +1,6 @@
+{
+  "targets": [
+    { "name": "example", "url": "https://example.com", "interval": "30s" },
+    { "name": "local", "url": "http://localhost:1", "interval": "10s" }
+  ]
+}
