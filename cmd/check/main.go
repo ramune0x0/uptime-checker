@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"os"
@@ -19,7 +20,7 @@ func main() {
 
 	hasDown := false
 	for _, url := range flag.Args() {
-		r := check.URL(url, *timeout)
+		r := check.URL(context.Background(), url, *timeout)
 		if r.Err != nil {
 			fmt.Printf("DOWN %s -> %v\n", url, r.Err)
 			hasDown = true

@@ -16,8 +16,8 @@ func (r Result) IsUp() bool {
 	return r.StatusCode >= http.StatusOK && r.StatusCode < http.StatusBadRequest
 }
 
-func URL(url string, timeout time.Duration) Result {
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+func URL(ctx context.Context, url string, timeout time.Duration) Result {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
