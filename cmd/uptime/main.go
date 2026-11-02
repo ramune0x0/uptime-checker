@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log/slog"
 	"os"
 	"os/signal"
 	"time"
@@ -26,5 +27,17 @@ func main() {
 		fmt.Fprintf(os.Stderr, "ERROR: %v\n", err)
 		os.Exit(1)
 	}
-	schedule.Run(ctx, targets, *timeout, func(t target.Target, r check.Result) { fmt.Println(t.Name, r) })
+	schedule.Run(ctx, targets, *timeout, logResult)
+}
+
+func logResult(t target.Target, r check.Result) {
+	if r.Err != nil {
+		slog.Info("DOWN", "name", t.Name, "url", t.URL, "err", r.Err, "ms", r.Elapsed.Milliseconds())
+		return
+	}
+	if r.IsUp() {
+		slog.Info("UP", "name", t.Name, "url", t.URL, "status", r.StatusCode, "ms", r.Elapsed.Milliseconds())
+	} else {
+		slog.Info("DOWN", "name", t.Name, "url", t.URL, "status", r.StatusCode, "ms", r.Elapsed.Milliseconds())
+	}
 }
