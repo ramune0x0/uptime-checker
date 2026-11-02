@@ -38,7 +38,7 @@ func Load(path string) ([]Target, error) {
 	for i, ft := range cfg.Targets {
 		d, err := time.ParseDuration(ft.Interval)
 		if err != nil {
-			return nil, fmt.Errorf("targets[%d]: interval %w", i, err)
+			return nil, fmt.Errorf("targets[%d]: interval: %w", i, err)
 		}
 		if ft.Name == "" {
 			return nil, fmt.Errorf("targets[%d]: name is empty", i)
